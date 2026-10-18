@@ -1,0 +1,141 @@
+<?xml version='1.0' encoding='UTF8'?>
+<workbook xmlns:user="http://www.tableausoftware.com/xml/user" original-version="26.1" source-build="20261.26.0211.1127" source-platform="win" version="26.1">
+  <document-format-change-manifest>
+    <ManifestByVersion/>
+  </document-format-change-manifest>
+  <datasources>
+    <datasource name="ecobati" caption="ÉcoBâti — consommations fictives" version="18.1" inline="true">
+      <connection class="textscan" directory="Data" filename="consommations.csv" password="" server="">
+        <relation name="consommations.csv" table="[consommations.csv]" type="table"/>
+        <textscan-format separator="," header="yes" locale="fr_FR" character-set="UTF-8" text-qualifier="&quot;"/>
+      </connection>
+      <column name="[Batiment_ID]" datatype="string" role="dimension" type="nominal"/>
+      <column name="[Ville]" datatype="string" role="dimension" type="nominal"/>
+      <column name="[Usage]" datatype="string" role="dimension" type="nominal"/>
+      <column name="[Surface_m2]" datatype="real" role="measure" type="quantitative"/>
+      <column name="[Date]" datatype="string" role="dimension" type="nominal"/>
+      <column name="[DJU]" datatype="real" role="measure" type="quantitative"/>
+      <column name="[Consommation_kwh]" datatype="real" role="measure" type="quantitative"/>
+      <column name="[Annee]" datatype="integer" role="dimension" type="nominal"/>
+      <column name="[Mois]" datatype="string" role="dimension" type="nominal"/>
+      <column name="[Intensite_kwh_m2]" datatype="real" role="measure" type="quantitative"/>
+      <column name="[Intensite_par_dju]" datatype="real" role="measure" type="quantitative"/>
+      <column name="[Intensite_ponderee]" caption="Intensité mensuelle pondérée (kWh/m²)" datatype="real" role="measure" type="quantitative">
+        <calculation class="tableau" formula="SUM([Consommation_kwh]) / SUM([Surface_m2])"/>
+      </column>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name="Intensité par usage">
+      <table>
+        <view>
+          <datasources>
+            <datasource name="ecobati" caption="ÉcoBâti — consommations fictives"/>
+          </datasources>
+          <datasource-dependencies datasource="ecobati">
+            <column name="[Usage]" datatype="string" role="dimension" type="nominal"/>
+            <column name="[Consommation_kwh]" datatype="real" role="measure" type="quantitative"/>
+            <column name="[Surface_m2]" datatype="real" role="measure" type="quantitative"/>
+            <column name="[Intensite_ponderee]" caption="Intensité mensuelle pondérée (kWh/m²)" datatype="real" role="measure" type="quantitative">
+              <calculation class="tableau" formula="SUM([Consommation_kwh]) / SUM([Surface_m2])"/>
+            </column>
+            <column-instance column="[Usage]" derivation="None" name="[none:Usage:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[Intensite_ponderee]" derivation="User" name="[usr:Intensite_ponderee:qk]" pivot="key" type="quantitative"/>
+          </datasource-dependencies>
+          <aggregation value="true"/>
+        </view>
+        <style/>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto"/>
+            </view>
+            <mark class="Bar"/>
+          </pane>
+        </panes>
+        <rows>[ecobati].[usr:Intensite_ponderee:qk]</rows>
+        <cols>[ecobati].[none:Usage:nk]</cols>
+      </table>
+      <simple-id uuid="{7f3b8bec-cbbd-4044-abaa-824b40103363}"/>
+    </worksheet>
+    <worksheet name="Évolution mensuelle">
+      <table>
+        <view>
+          <datasources>
+            <datasource name="ecobati" caption="ÉcoBâti — consommations fictives"/>
+          </datasources>
+          <datasource-dependencies datasource="ecobati">
+            <column name="[Mois]" datatype="string" role="dimension" type="nominal"/>
+            <column name="[Consommation_kwh]" datatype="real" role="measure" type="quantitative"/>
+            <column name="[Surface_m2]" datatype="real" role="measure" type="quantitative"/>
+            <column name="[Intensite_ponderee]" caption="Intensité mensuelle pondérée (kWh/m²)" datatype="real" role="measure" type="quantitative">
+              <calculation class="tableau" formula="SUM([Consommation_kwh]) / SUM([Surface_m2])"/>
+            </column>
+            <column-instance column="[Mois]" derivation="None" name="[none:Mois:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[Intensite_ponderee]" derivation="User" name="[usr:Intensite_ponderee:qk]" pivot="key" type="quantitative"/>
+          </datasource-dependencies>
+          <aggregation value="true"/>
+        </view>
+        <style/>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto"/>
+            </view>
+            <mark class="Line"/>
+          </pane>
+        </panes>
+        <rows>[ecobati].[usr:Intensite_ponderee:qk]</rows>
+        <cols>[ecobati].[none:Mois:nk]</cols>
+      </table>
+      <simple-id uuid="{a917db7a-5934-4236-ae6b-f77138362128}"/>
+    </worksheet>
+    <worksheet name="Comparaison des bâtiments">
+      <table>
+        <view>
+          <datasources>
+            <datasource name="ecobati" caption="ÉcoBâti — consommations fictives"/>
+          </datasources>
+          <datasource-dependencies datasource="ecobati">
+            <column name="[Batiment_ID]" datatype="string" role="dimension" type="nominal"/>
+            <column name="[Consommation_kwh]" datatype="real" role="measure" type="quantitative"/>
+            <column name="[Surface_m2]" datatype="real" role="measure" type="quantitative"/>
+            <column name="[Intensite_ponderee]" caption="Intensité mensuelle pondérée (kWh/m²)" datatype="real" role="measure" type="quantitative">
+              <calculation class="tableau" formula="SUM([Consommation_kwh]) / SUM([Surface_m2])"/>
+            </column>
+            <column-instance column="[Batiment_ID]" derivation="None" name="[none:Batiment_ID:nk]" pivot="key" type="nominal"/>
+            <column-instance column="[Intensite_ponderee]" derivation="User" name="[usr:Intensite_ponderee:qk]" pivot="key" type="quantitative"/>
+          </datasource-dependencies>
+          <aggregation value="true"/>
+        </view>
+        <style/>
+        <panes>
+          <pane selection-relaxation-option="selection-relaxation-allow">
+            <view>
+              <breakdown value="auto"/>
+            </view>
+            <mark class="Bar"/>
+          </pane>
+        </panes>
+        <rows>[ecobati].[usr:Intensite_ponderee:qk]</rows>
+        <cols>[ecobati].[none:Batiment_ID:nk]</cols>
+      </table>
+      <simple-id uuid="{e7e088fd-e468-44ca-82ed-b3a15eb15b78}"/>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name="ÉcoBâti — synthèse exploratoire">
+      <style/>
+      <size minwidth="1200" maxwidth="1200" minheight="900" maxheight="900"/>
+      <zones>
+        <zone id="1" name="Intensité par usage" x="0" y="0" w="100000" h="33333"/>
+        <zone id="2" name="Évolution mensuelle" x="0" y="33333" w="100000" h="33333"/>
+        <zone id="3" name="Comparaison des bâtiments" x="0" y="66666" w="100000" h="33333"/>
+      </zones>
+      <simple-id uuid="{d2686353-1dd3-4318-b240-73a5e0dc3cbe}"/>
+    </dashboard>
+  </dashboards>
+  <explain-data enabled-for-viewer="false" extreme-values-enabled-for-all="false">
+    <explanation-types/>
+  </explain-data>
+</workbook>
